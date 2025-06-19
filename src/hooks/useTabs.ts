@@ -41,9 +41,8 @@ export const useTabs = () => {
     dispatch(removeTab(tabId));
   };
 
-  const handleSetActiveTab = (tabId: string, url: string) => {
+  const handleSetActiveTab = (tabId: string) => {
     dispatch(setActiveTab(tabId));
-    window.location.href = url;
   };
 
   const handleAddTabFromHidden = (tabId: string) => {
@@ -79,7 +78,7 @@ export const useTabs = () => {
   };
 };
 
-// Тип для RootState (замените на ваш реальный тип)
+// Тип для RootState (замените на ваш реальний тип)
 export interface RootState {
   tabs: {
     visibleTabs: TabType[];

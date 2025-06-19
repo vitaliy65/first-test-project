@@ -1,6 +1,7 @@
 @import "tailwindcss";
+
 .tab{
-    @apply relative px-3 py-2 flex items-center gap-2 min-w-fit max-w-[200px] cursor-pointer select-none
+    @apply relative px-3 py-2 flex items-center gap-2 min-w-fit max-w-[200px] h-full cursor-pointer select-none
 }
 
 .tab.pinned {

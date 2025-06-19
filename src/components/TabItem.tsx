@@ -6,6 +6,7 @@ import { TabType } from "@/types/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import Image from "next/image";
 import PinTabModal from "./PinTabModal";
+import Link from "next/link";
 
 interface Props {
   tab: TabType;
@@ -42,47 +43,49 @@ const TabItem: React.FC<Props> = ({
   };
 
   return (
-    <div
-      ref={(node) => {
-        setNodeRef(node);
-        if (setRef) {
-          setRef(node);
-        }
-      }}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={`tab
-        ${tab.isPinned ? "pinned" : ""}
-        ${tab.id === draggedTabId ? "drag" : ""}
-        ${isActive ? "active" : ""}
-      `}
-      onClick={onClick}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={handleMouseLeave}
-      data-id={tab.id}
-    >
-      {/* tab icon */}
-      <Image src={tab.icon} alt={tab.title} width={16} height={16} />
+    <Link href={tab.url} passHref>
+      <div
+        ref={(node) => {
+          setNodeRef(node);
+          if (setRef) {
+            setRef(node);
+          }
+        }}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className={`tab
+          ${tab.isPinned ? "pinned" : ""}
+          ${tab.id === draggedTabId ? "drag" : ""}
+          ${isActive ? "active" : ""}
+        `}
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={handleMouseLeave}
+        data-id={tab.id}
+        onClick={onClick}
+      >
+        {/* tab icon */}
+        <Image src={tab.icon} alt={tab.title} width={16} height={16} />
 
-      {/* tab title */}
-      <span className="truncate flex-1">{tab.title}</span>
+        {/* tab title */}
+        <span className="truncate flex-1">{tab.title}</span>
 
-      {/* show delete button when hover */}
-      {isHover && (
-        <button onClick={onRemove} className="delete-tab">
-          <X size={12} />
-        </button>
-      )}
+        {/* show delete button when hover */}
+        {isHover && (
+          <button onClick={onRemove} className="delete-tab">
+            <X size={12} />
+          </button>
+        )}
 
-      {/* pin modal */}
-      <PinTabModal
-        isPinned={tab.isPinned}
-        show={isHover}
-        isDragging={tab.id === draggedTabId}
-        onPin={onPin}
-      />
-    </div>
+        {/* pin modal */}
+        <PinTabModal
+          isPinned={tab.isPinned}
+          show={isHover}
+          isDragging={tab.id === draggedTabId}
+          onPin={onPin}
+        />
+      </div>
+    </Link>
   );
 };
 

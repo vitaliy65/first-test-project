@@ -6,15 +6,15 @@ import { addTabFromHidden, setActiveTab } from "@/store/tabs/tabsSlice";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function DropDownMenu() {
   const dispatch = useAppDispatch();
   const hiddenTabs = useAppSelector((state) => state.tabs.hiddenTabs);
 
-  const handleTabClick = (tabId: string, url: string) => {
+  const handleTabClick = (tabId: string) => {
     dispatch(addTabFromHidden([tabId]));
     dispatch(setActiveTab(tabId));
-    window.location.href = url;
   };
 
   const tabsInMenu = hiddenTabs;
@@ -36,11 +36,18 @@ export default function DropDownMenu() {
             {tabsInMenu.map((tab: TabType) => (
               <DropdownMenu.Item
                 key={tab.id}
-                className="dropdown-menu-item"
-                onSelect={() => handleTabClick(tab.id, tab.url)}
+                onSelect={() => handleTabClick(tab.id)}
+                asChild
               >
-                <Image src={tab.icon} alt={tab.title} width={16} height={16} />
-                <span className="truncate">{tab.title}</span>
+                <Link href={tab.url} className="dropdown-menu-item">
+                  <Image
+                    src={tab.icon}
+                    alt={tab.title}
+                    width={16}
+                    height={16}
+                  />
+                  <span className="truncate">{tab.title}</span>
+                </Link>
               </DropdownMenu.Item>
             ))}
           </ul>

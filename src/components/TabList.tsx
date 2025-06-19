@@ -7,7 +7,7 @@ import DropDownMenu from "./DropDownMenu";
 
 interface Props {
   activeTab: string | null;
-  onSetActive: (id: string, url: string) => void;
+  onSetActive: (id: string) => void;
   onPin: (id: string) => void;
   onRemove: (id: string) => void;
   draggedTabId: UniqueIdentifier | null;
@@ -113,7 +113,7 @@ const TabList: React.FC<Props> = ({
                   <TabItem
                     tab={tab}
                     isActive={tab.id === activeTab}
-                    onClick={() => onSetActive(tab.id, tab.url)}
+                    onClick={() => onSetActive(tab.id)}
                     onPin={() => onPin(tab.id)}
                     onRemove={() => onRemove(tab.id)}
                     draggedTabId={draggedTabId}
