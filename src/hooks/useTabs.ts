@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   updateTabsOrder,
   togglePinTab,
@@ -53,14 +53,17 @@ export const useTabs = () => {
     dispatch(moveTabToHidden([tabId]));
   };
 
-  const syncTabsVisibility = (tabsToHide: string[], tabsToShow: string[]) => {
-    if (tabsToHide.length > 0) {
-      dispatch(moveTabToHidden(tabsToHide));
-    }
-    if (tabsToShow.length > 0) {
-      dispatch(addTabFromHidden(tabsToShow));
-    }
-  };
+  const syncTabsVisibility = useCallback(
+    (tabsToHide: string[], tabsToShow: string[]) => {
+      if (tabsToHide.length > 0) {
+        dispatch(moveTabToHidden(tabsToHide));
+      }
+      if (tabsToShow.length > 0) {
+        dispatch(addTabFromHidden(tabsToShow));
+      }
+    },
+    [dispatch]
+  );
 
   return {
     visibleTabs: sortedTabs,

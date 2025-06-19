@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import TabItem from "./TabItem";
 import { UniqueIdentifier } from "@dnd-kit/core";
@@ -28,8 +28,9 @@ const TabList: React.FC<Props> = ({
     visibleTabs,
   } = useTabs();
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
+    setWidth(window.innerWidth);
     const container = containerRef.current;
     if (!container) return;
 
@@ -91,12 +92,7 @@ const TabList: React.FC<Props> = ({
 
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
-  }, [
-    pinnedTabs.length,
-    unpinnedTabs.length,
-    hiddenTabs.length,
-    visibleTabs.length,
-  ]);
+  }, [width, hiddenTabs.length, visibleTabs.length]);
 
   return (
     <div ref={containerRef} className="flex min-h-12  relative">
