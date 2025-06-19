@@ -1,28 +1,28 @@
 .tab{
-    @apply relative px-3 py-2 flex items-center gap-2 min-w-[100px] max-w-[200px] truncate cursor-pointer select-none
+    @apply relative px-3 py-2 flex items-center gap-2 min-w-fit max-w-[200px] cursor-pointer select-none
 }
 
-.tab.pinned{
+.tab.pinned {
     @apply bg-amber-100 border-t-2 border-amber-400 text-black
 }
 
-.tab.drag{
+.tab.drag {
     @apply border-0 border-transparent bg-gray-500 text-white
 }
 
-.tab.active{
+.tab.active {
     @apply border-t-2 border-activeTabBorder text-activeTabText bg-background-alt
 }
 
-.delete-tab{
+.delete-tab {
     @apply absolute rounded-full bg-red-500 text-white h-3 w-3 right-2
 }
 
-.pin-tab{
-    @apply flex
+.pin-tab {
+    @apply absolute flex flex-row gap-2 w-32 justify-center items-center -bottom-12 rounded-md shadow-xl border border-border z-10 cursor-pointer bg-background p-2
 }
 
-.unpin-tab{
+.unpin-tab {
     @apply flex
 }
 
