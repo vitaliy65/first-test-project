@@ -8,35 +8,12 @@
 
 :root {
   /* Backgrounds */
-  --background: #F8FAFC;
-  --background-alt: #E2E8F0;
-  
-  --foreground: #1E293B; 
-  
-  /* Text */
-  --text-main: #1E293B;
-  --text-muted: #64748B;
-  --text-on-dark: #F8FAFC;
+  --background: #ffffff;
+  --background-alt: #f1f5f8;
+  --foreground: #7f858d; 
 
-  /* Primary (темно-синій) */
-  --primary: #0F172A;
-  --primary-hover: #1E293B;
-  --primary-active: #334155;
-
-  /* Accent (блакитний) */
-  --accent: #3B82F6;
-  --accent-hover: #2563EB;
-  --accent-active: #1D4ED8;
-
-  /* Buttons */
-  --button-bg: var(--accent);
-  --button-bg-hover: var(--accent-hover);
-  --button-bg-active: var(--accent-active);
-  --button-text: #ffffff;
-
-  /* Borders and shadows */
-  --border-color: #CBD5E1;
-  --shadow-color: rgba(15, 23, 42, 0.1);
+  --activeTabBorder: #4690e2;
+  --activeTabText: #343434;
 }
 
 @theme inline {
@@ -44,69 +21,21 @@
   --color-background: var(--background);
   --color-background-alt: var(--background-alt);
   --color-foreground: var(--foreground);
-  
-  /* Текст */
-  --color-text-main: var(--text-main);
-  --color-text-muted: var(--text-muted);
-  --color-text-on-dark: var(--text-on-dark);
 
-  /* Primary */
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-primary-active: var(--primary-active);
-
-  /* Accent */
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-active: var(--accent-active);
-
-  /* Кнопки */
-  --button-bg: var(--button-bg);
-  --button-bg-hover: var(--button-bg-hover);
-  --button-bg-active: var(--button-bg-active);
-  --button-text: var(--button-text);
-
-  /* Додаткові стилі */
-  --border-color: var(--border-color);
-  --shadow-color: var(--shadow-color);
-
-  /* Шрифти */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-activeTabBorder: var(--activeTabBorder);
+  --color-activeTabText: var(--activeTabText);
 }
 
 
 @media (prefers-color-scheme: dark) {
   :root {
     /* Backgrounds */
-    --background: #0a0a0a;
-    --background-alt: #111827;
-    --foreground: #ededed;
-
-    /* Text */
-    --text-main: #f1f5f9;
-    --text-muted: #94A3B8;
-    --text-on-dark: #ffffff;
-
-    /* Primary */
-    --primary: #1E293B;
-    --primary-hover: #334155;
-    --primary-active: #475569;
-
-    /* Accent */
-    --accent: #60A5FA;
-    --accent-hover: #3B82F6;
-    --accent-active: #2563EB;
-
-    /* Buttons */
-    --button-bg: var(--accent);
-    --button-bg-hover: var(--accent-hover);
-    --button-bg-active: var(--accent-active);
-    --button-text: #ffffff;
-
-    /* Borders and shadows */
-    --border-color: #475569;
-    --shadow-color: rgba(148, 163, 184, 0.1);
+    --background: #ffffff;
+    --background-alt: #f1f5f8;
+    --foreground: #7f858d; 
+  
+    --activeTabBorder: #4690e2;
+    --activeTabText: #343434;
   }
 }
 
