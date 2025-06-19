@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex w-full min-h-screen">
         <Providers>{children}</Providers>
       </body>
     </html>

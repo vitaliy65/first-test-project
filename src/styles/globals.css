@@ -1,10 +1,6 @@
 @import "tailwindcss";
-@import "./header.css";
-@import "./footer.css";
-@import "./swiper.css";
-@import "./main-sections/aboutProduct.css";
-@import "./main-sections/productBenefits.css";
-@import "./main-sections/productFeatures.css";
+@import "./main.css";
+
 
 :root {
   /* Backgrounds */
@@ -14,6 +10,11 @@
 
   --activeTabBorder: #4690e2;
   --activeTabText: #343434;
+
+  --drag-tab: #7f858d;
+  --drag-text: #ffffff;
+
+  --border: #eff0f5;
 }
 
 @theme inline {
@@ -24,6 +25,11 @@
 
   --color-activeTabBorder: var(--activeTabBorder);
   --color-activeTabText: var(--activeTabText);
+
+  --color-drag-tab: var(--drag-tab);
+  --color-drag-text: var(--drag-text);
+
+  --color-border: var(--border);
 }
 
 
@@ -36,6 +42,11 @@
   
     --activeTabBorder: #4690e2;
     --activeTabText: #343434;
+
+    --drag-tab: #7f858d;
+    --drag-text: #ffffff;
+
+    --border: #eff0f5;
   }
 }
 

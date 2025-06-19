@@ -1,0 +1,11 @@
+.main-container{
+    @apply flex w-full h-full flex-row
+}
+
+.upper-margin{
+    @apply flex h-[69px] w-full border-l border-b border-border
+}
+
+.left-margin{
+    @apply flex w-[62px] min-h-screen shrink-0
+}
