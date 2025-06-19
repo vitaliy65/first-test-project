@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "./main.css";
-
+@import "./tabsLayout.css";
+@import "./tab.css";
 
 :root {
   /* Backgrounds */

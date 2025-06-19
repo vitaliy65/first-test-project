@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Providers from "@/components/Providers";
+import TabsContainer from "@/components/DraggableTabs";
 
 export const metadata: Metadata = {
   title: "Posvistak Vitaliy - first test project",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex w-full min-h-screen">
-        <Providers>{children}</Providers>
+        <Providers>
+          <TabsContainer>{children}</TabsContainer>
+        </Providers>
       </body>
     </html>
   );

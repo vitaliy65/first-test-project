@@ -1,56 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-export interface Tab {
-  id: string;
-  name: string;
-  icon?: string;
-  url: string;
-  isActive?: boolean;
-  isPinned?: boolean;
-}
+import { allTabs } from "@/data/tabs";
+import { TabType } from "@/types/types";
 
 interface TabsState {
-  visibleTabs: Tab[];
+  visibleTabs: TabType[];
   activeTabId: string | null;
-  hiddenTabs: Tab[];
+  hiddenTabs: TabType[];
   showSidebar: boolean;
 }
-
-const allTabs: Tab[] = [
-  { id: "dashboard", name: "Dashboard", url: "/dashboard", icon: "📊" },
-  { id: "banking", name: "Banking", url: "/banking", icon: "🏦" },
-  { id: "telefonie", name: "Telefonie", url: "/telefonie", icon: "📞" },
-  { id: "accounting", name: "Accounting", url: "/accounting", icon: "📋" },
-  { id: "verkauf", name: "Verkauf", url: "/verkauf", icon: "💼" },
-  { id: "statistik", name: "Statistik", url: "/statistik", icon: "📈" },
-  { id: "post-office", name: "Post Office", url: "/post-office", icon: "📮" },
-  {
-    id: "administration",
-    name: "Administration",
-    url: "/administration",
-    icon: "⚙️",
-  },
-  { id: "help", name: "Help", url: "/help", icon: "❓" },
-  {
-    id: "warenbestand",
-    name: "Warenbestand",
-    url: "/warenbestand",
-    icon: "📦",
-  },
-  {
-    id: "auswahllisten",
-    name: "Auswahllisten",
-    url: "/auswahllisten",
-    icon: "📝",
-  },
-  { id: "einkauf", name: "Einkauf", url: "/einkauf", icon: "🛒" },
-  {
-    id: "lagerverwaltung",
-    name: "Lagerverwaltung",
-    url: "/lagerverwaltung",
-    icon: "🏪",
-  },
-];
 
 const initialState: TabsState = {
   visibleTabs: allTabs,
@@ -68,8 +25,21 @@ export const tabsSlice = createSlice({
       action: PayloadAction<{ fromIndex: number; toIndex: number }>
     ) => {
       const { fromIndex, toIndex } = action.payload;
+
       const [movedTab] = state.visibleTabs.splice(fromIndex, 1);
       state.visibleTabs.splice(toIndex, 0, movedTab);
+
+      // Ensure pinned tabs remain at the beginning, maintaining their relative order
+      state.visibleTabs.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return 0;
+      });
+
+      // Update positions after reordering and sorting
+      state.visibleTabs.forEach((tab, index) => {
+        tab.position = index;
+      });
     },
     setActiveTab: (state, action: PayloadAction<string>) => {
       state.activeTabId = action.payload;
@@ -101,21 +71,39 @@ export const tabsSlice = createSlice({
     },
     toggleTabPin: (state, action: PayloadAction<string>) => {
       const tabId = action.payload;
-      const visibleTabIndex = state.visibleTabs.findIndex(
-        (tab) => tab.id === tabId
-      );
-      if (visibleTabIndex !== -1) {
-        state.visibleTabs[visibleTabIndex].isPinned =
-          !state.visibleTabs[visibleTabIndex].isPinned;
-      } else {
-        const hiddenTabIndex = state.hiddenTabs.findIndex(
-          (tab) => tab.id === tabId
-        );
-        if (hiddenTabIndex !== -1) {
-          state.hiddenTabs[hiddenTabIndex].isPinned =
-            !state.hiddenTabs[hiddenTabIndex].isPinned;
+      const tabIndex = state.visibleTabs.findIndex((tab) => tab.id === tabId);
+
+      if (tabIndex !== -1) {
+        const [tab] = state.visibleTabs.splice(tabIndex, 1);
+        tab.isPinned = !tab.isPinned;
+
+        if (tab.isPinned) {
+          // Find the last pinned tab to insert after it
+          let insertIndex = 0;
+          for (let i = 0; i < state.visibleTabs.length; i++) {
+            if (state.visibleTabs[i].isPinned) {
+              insertIndex = i + 1;
+            } else {
+              break; // Found the first unpinned tab, insert before it
+            }
+          }
+          state.visibleTabs.splice(insertIndex, 0, tab);
+        } else {
+          // If unpinning, add to the end of unpinned tabs
+          state.visibleTabs.push(tab);
         }
       }
+    },
+    removeTab: (state, action: PayloadAction<string>) => {
+      state.visibleTabs = state.visibleTabs.filter(
+        (tab) => tab.id !== action.payload
+      );
+      if (state.activeTabId === action.payload) {
+        state.activeTabId = state.visibleTabs[0]?.id || null;
+      }
+      state.visibleTabs.forEach((tab, index) => {
+        tab.position = index;
+      });
     },
   },
 });
@@ -127,4 +115,5 @@ export const {
   moveTabToHidden,
   setSidebar,
   toggleTabPin,
+  removeTab,
 } = tabsSlice.actions;
