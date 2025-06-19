@@ -3,6 +3,8 @@ import {
   togglePinTab,
   removeTab,
   setActiveTab,
+  moveTabToHidden,
+  addTabFromHidden,
 } from "@/store/tabs/tabsSlice";
 import { TabType } from "../types/types";
 import { useAppSelector } from "./useAppSelector";
@@ -10,7 +12,9 @@ import { useAppDispatch } from "./useAppDispatch";
 
 export const useTabs = () => {
   const dispatch = useAppDispatch();
-  const { visibleTabs, activeTabId } = useAppSelector((state) => state.tabs);
+  const { visibleTabs, activeTabId, hiddenTabs } = useAppSelector(
+    (state) => state.tabs
+  );
 
   // Сортируем вкладки по позиции
   const sortedTabs = [...visibleTabs].sort((a, b) => a.position - b.position);
@@ -31,6 +35,14 @@ export const useTabs = () => {
     dispatch(setActiveTab(tabId));
   };
 
+  const handleAddTabFromHidden = (tabId: string) => {
+    dispatch(addTabFromHidden(tabId));
+  };
+
+  const handleMoveTabToHidden = (tabId: string) => {
+    dispatch(moveTabToHidden(tabId));
+  };
+
   // Разделяем закрепленные и обычные вкладки
   const pinnedTabs = sortedTabs.filter((tab) => tab.isPinned);
   const unpinnedTabs = sortedTabs.filter((tab) => !tab.isPinned);
@@ -38,9 +50,12 @@ export const useTabs = () => {
   return {
     visibleTabs: sortedTabs,
     pinnedTabs,
+    hiddenTabs,
     unpinnedTabs,
     updateTabsOrder: handleUpdateTabsOrder,
     togglePinTab: handleTogglePinTab,
+    addTabFromHidden: handleAddTabFromHidden,
+    moveTabToHidden: handleMoveTabToHidden,
     removeTab: handleRemoveTab,
     setActiveTab: handleSetActiveTab,
     activeTabId,

@@ -36,7 +36,7 @@ const TabItem: React.FC<Props> = ({
   const [isHover, setIsHover] = useState(false);
 
   const handleMouseLeave = () => {
-    setTimeout(() => setIsHover(false), 200);
+    setTimeout(() => setIsHover(false), 100);
   };
 
   return (

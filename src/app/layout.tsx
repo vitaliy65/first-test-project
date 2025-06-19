@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex w-full min-h-screen">
+      <body className="flex w-full max-h-screen overflow-hidden">
         <Providers>
           <TabsContainer>{children}</TabsContainer>
         </Providers>

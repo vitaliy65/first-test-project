@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import TabItem from "./TabItem";
 import { TabType } from "@/types/types";
@@ -23,9 +23,10 @@ const TabList: React.FC<Props> = ({
 }) => {
   const pinned = tabs.filter((tab) => tab.isPinned);
   const unpinned = tabs.filter((tab) => !tab.isPinned);
+  const containerRef = useRef(null);
 
   return (
-    <div className="flex">
+    <div ref={containerRef} className="flex min-h-12">
       {[pinned, unpinned].map((group, i) => (
         <SortableContext
           key={i}
