@@ -10,33 +10,35 @@ import {
   DragOverEvent,
   UniqueIdentifier,
 } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 
 import TabList from "./TabList";
 import { TabType } from "@/types/types";
-import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { useAppSelector } from "@/hooks/useAppSelector";
-import {
-  reorderTabs,
-  toggleTabPin,
-  removeTab,
-  setActiveTab,
-} from "@/store/tabs/tabsSlice";
-import { RootState } from "@/store/store";
 import { useState } from "react";
+import { useTabs } from "@/hooks/useTabs";
 
 interface TabsLayoutProps {
   children: ReactNode;
 }
 
 export default function TabsContainer({ children }: TabsLayoutProps) {
-  const dispatch = useAppDispatch();
-  const { visibleTabs: tabs, activeTabId: activeTab } = useAppSelector(
-    (state: RootState) => state.tabs
-  );
+  const {
+    visibleTabs: tabs,
+    activeTabId: activeTab,
+    updateTabsOrder,
+    setActiveTab,
+    togglePinTab,
+    removeTab,
+  } = useTabs();
   const [draggedTabId, setDraggedTabId] = useState<UniqueIdentifier | null>(
     null
   );
-  const sensor = useSensor(PointerSensor);
+  const sensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setDraggedTabId(event.active.id);
@@ -46,12 +48,16 @@ export default function TabsContainer({ children }: TabsLayoutProps) {
     (event: DragOverEvent) => {
       const { active, over } = event;
       if (active.id !== over?.id) {
-        const activeIndex = tabs.findIndex((t: TabType) => t.id === active.id);
-        const overIndex = tabs.findIndex((t: TabType) => t.id === over?.id);
-        dispatch(reorderTabs({ fromIndex: activeIndex, toIndex: overIndex }));
+        const oldIndex = tabs.findIndex((t: TabType) => t.id === active.id);
+        const newIndex = tabs.findIndex((t: TabType) => t.id === over?.id);
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newTabs = arrayMove(tabs, oldIndex, newIndex);
+          updateTabsOrder(newTabs);
+        }
       }
     },
-    [tabs, dispatch]
+    [tabs, updateTabsOrder]
   );
 
   const handleDragEnd = useCallback(() => {
@@ -74,9 +80,9 @@ export default function TabsContainer({ children }: TabsLayoutProps) {
             <TabList
               tabs={tabs}
               activeTab={activeTab}
-              onSetActive={(id) => dispatch(setActiveTab(id))}
-              onPin={(id) => dispatch(toggleTabPin(id))}
-              onRemove={(id) => dispatch(removeTab(id))}
+              onSetActive={setActiveTab}
+              onPin={togglePinTab}
+              onRemove={removeTab}
               draggedTabId={draggedTabId}
             />
             <div className="p-4 w-full h-full bg-background-alt">

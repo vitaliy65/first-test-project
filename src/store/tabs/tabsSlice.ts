@@ -9,37 +9,49 @@ interface TabsState {
   showSidebar: boolean;
 }
 
-const initialState: TabsState = {
-  visibleTabs: allTabs,
-  activeTabId: allTabs[0]?.id || null,
-  hiddenTabs: [],
-  showSidebar: true,
+const loadState = (): TabsState => {
+  if (typeof window !== "undefined") {
+    try {
+      const serializedState = localStorage.getItem("exonnTabsState");
+      if (serializedState === null) {
+        return {
+          visibleTabs: allTabs,
+          activeTabId: allTabs[0]?.id || null,
+          hiddenTabs: [],
+          showSidebar: true,
+        };
+      }
+      return JSON.parse(serializedState);
+    } catch (error) {
+      console.error("Error loading state from localStorage:", error);
+      return {
+        visibleTabs: allTabs,
+        activeTabId: allTabs[0]?.id || null,
+        hiddenTabs: [],
+        showSidebar: true,
+      };
+    }
+  }
+  return {
+    visibleTabs: allTabs,
+    activeTabId: allTabs[0]?.id || null,
+    hiddenTabs: [],
+    showSidebar: true,
+  };
 };
+
+const initialState: TabsState = loadState();
 
 export const tabsSlice = createSlice({
   name: "tabs",
   initialState,
   reducers: {
-    reorderTabs: (
-      state,
-      action: PayloadAction<{ fromIndex: number; toIndex: number }>
-    ) => {
-      const { fromIndex, toIndex } = action.payload;
-
-      const [movedTab] = state.visibleTabs.splice(fromIndex, 1);
-      state.visibleTabs.splice(toIndex, 0, movedTab);
-
-      // Ensure pinned tabs remain at the beginning, maintaining their relative order
-      state.visibleTabs.sort((a, b) => {
-        if (a.isPinned && !b.isPinned) return -1;
-        if (!a.isPinned && b.isPinned) return 1;
-        return 0;
-      });
-
-      // Update positions after reordering and sorting
-      state.visibleTabs.forEach((tab, index) => {
-        tab.position = index;
-      });
+    updateTabsOrder: (state, action: PayloadAction<TabType[]>) => {
+      const updatedTabs = action.payload.map((tab, index) => ({
+        ...tab,
+        position: index,
+      }));
+      state.visibleTabs = updatedTabs;
     },
     setActiveTab: (state, action: PayloadAction<string>) => {
       state.activeTabId = action.payload;
@@ -69,29 +81,10 @@ export const tabsSlice = createSlice({
     setSidebar: (state, action: PayloadAction<boolean>) => {
       state.showSidebar = action.payload;
     },
-    toggleTabPin: (state, action: PayloadAction<string>) => {
-      const tabId = action.payload;
-      const tabIndex = state.visibleTabs.findIndex((tab) => tab.id === tabId);
-
-      if (tabIndex !== -1) {
-        const [tab] = state.visibleTabs.splice(tabIndex, 1);
+    togglePinTab: (state, action: PayloadAction<string>) => {
+      const tab = state.visibleTabs.find((t) => t.id === action.payload);
+      if (tab) {
         tab.isPinned = !tab.isPinned;
-
-        if (tab.isPinned) {
-          // Find the last pinned tab to insert after it
-          let insertIndex = 0;
-          for (let i = 0; i < state.visibleTabs.length; i++) {
-            if (state.visibleTabs[i].isPinned) {
-              insertIndex = i + 1;
-            } else {
-              break; // Found the first unpinned tab, insert before it
-            }
-          }
-          state.visibleTabs.splice(insertIndex, 0, tab);
-        } else {
-          // If unpinning, add to the end of unpinned tabs
-          state.visibleTabs.push(tab);
-        }
       }
     },
     removeTab: (state, action: PayloadAction<string>) => {
@@ -109,11 +102,11 @@ export const tabsSlice = createSlice({
 });
 
 export const {
-  reorderTabs,
+  updateTabsOrder,
   setActiveTab,
   addTabFromHidden,
   moveTabToHidden,
   setSidebar,
-  toggleTabPin,
+  togglePinTab,
   removeTab,
 } = tabsSlice.actions;

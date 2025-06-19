@@ -33,16 +33,20 @@ const TabList: React.FC<Props> = ({
           strategy={rectSortingStrategy}
         >
           <div className="flex bg-background">
-            {group.map((tab) => (
-              <TabItem
-                key={tab.id}
-                tab={tab}
-                isActive={tab.id === activeTab}
-                onClick={() => onSetActive(tab.id)}
-                onPin={() => onPin(tab.id)}
-                onRemove={() => onRemove(tab.id)}
-                draggedTabId={draggedTabId}
-              />
+            {group.map((tab, index) => (
+              <React.Fragment key={tab.id}>
+                <TabItem
+                  tab={tab}
+                  isActive={tab.id === activeTab}
+                  onClick={() => onSetActive(tab.id)}
+                  onPin={() => onPin(tab.id)}
+                  onRemove={() => onRemove(tab.id)}
+                  draggedTabId={draggedTabId}
+                />
+                {index < group.length - 1 && (
+                  <div className="tab-separator"></div>
+                )}
+              </React.Fragment>
             ))}
           </div>
         </SortableContext>

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Pin, PinOff, X } from "lucide-react";
 import { TabType } from "@/types/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
+import Image from "next/image";
 
 interface Props {
   tab: TabType;
@@ -31,6 +32,7 @@ const TabItem: React.FC<Props> = ({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const [isHover, setIsHover] = useState(false);
 
   return (
     <div
@@ -38,19 +40,22 @@ const TabItem: React.FC<Props> = ({
       style={style}
       {...attributes}
       {...listeners}
-      className={`px-3 py-2 flex items-center gap-2 min-w-[100px] max-w-[200px] truncate cursor-pointer select-none
-        ${
-          isActive
-            ? "border-t-2 border-activeTabBorder text-activeTabText bg-background-alt"
-            : ""
-        }
-        ${tab.isPinned ? "" : ""}
-        ${tab.id === draggedTabId && "bg-gray-500 text-white"}
+      className={`tab
+        ${tab.isPinned ? "pinned" : ""}
+        ${tab.id === draggedTabId ? "drag" : ""}
+        ${isActive ? "active" : ""}
       `}
       onClick={onClick}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
     >
-      <tab.icon size={16} />
+      <Image src={tab.icon} alt={tab.title} width={16} height={16} />
       <span className="truncate flex-1">{tab.title}</span>
+      {isHover && (
+        <button onClick={onRemove} className="delete-tab">
+          <X size={12} />
+        </button>
+      )}
       {/* <button onClick={onPin}>{tab.isPinned ? <PinOff /> : <Pin />}</button>
       <button onClick={onRemove}>
         <X />

@@ -1,3 +1,31 @@
 .tab{
-    @apply flex flex-row w-fit h-full items-center gap-1 p-3
+    @apply relative px-3 py-2 flex items-center gap-2 min-w-[100px] max-w-[200px] truncate cursor-pointer select-none
+}
+
+.tab.pinned{
+    @apply bg-amber-100 border-t-2 border-amber-400 text-black
+}
+
+.tab.drag{
+    @apply border-0 border-transparent bg-gray-500 text-white
+}
+
+.tab.active{
+    @apply border-t-2 border-activeTabBorder text-activeTabText bg-background-alt
+}
+
+.delete-tab{
+    @apply absolute rounded-full bg-red-500 text-white h-3 w-3 right-2
+}
+
+.pin-tab{
+    @apply flex
+}
+
+.unpin-tab{
+    @apply flex
+}
+
+.tab-separator {
+    @apply w-[1px] bg-gray-300 mx-1 my-2
 }
