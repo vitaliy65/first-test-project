@@ -103,6 +103,6 @@ export const allTabs: TabType[] = [
     url: "/lagerverwaltung",
     icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXdhcmVob3VzZS1pY29uIGx1Y2lkZS13YXJlaG91c2UiPjxwYXRoIGQ9Ik0xOCAyMVYxMGExIDEgMCAwIDAtMS0xSDdhMSAxIDAgMCAwLTEgMXYxMSIvPjxwYXRoIGQ9Ik0yMiAxOWEyIDIgMCAwIDEtMiAySDRhMiAyIDAgMCAxLTItMlY4YTIgMiAwIDAgMSAxLjEzMi0xLjgwM2w3Ljk1LTMuOTc0YTIgMiAwIDAgMSAxLjgzNyAwbDcuOTQ4IDMuOTc0QTIgMiAwIDAgMSAyMiA4eiIvPjxwYXRoIGQ9Ik02IDEzaDEyIi8+PHBhdGggZD0iTTYgMTdoMTIiLz48L3N2Zz4=",
     isPinned: false,
-    position: 7,
+    position: 12,
   },
 ];

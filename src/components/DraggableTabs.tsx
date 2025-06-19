@@ -74,11 +74,10 @@ export default function TabsContainer({ children }: TabsLayoutProps) {
     >
       <main className="main-container">
         <div className="left-margin"></div>
-        <div className="flex flex-col w-full min-h-screen">
+        <div className="flex flex-col w-full min-h-screen overflow-hidden">
           <div className="upper-margin"></div>
           <div className="flex flex-col w-full h-full">
             <TabList
-              tabs={tabs}
               activeTab={activeTab}
               onSetActive={setActiveTab}
               onPin={togglePinTab}

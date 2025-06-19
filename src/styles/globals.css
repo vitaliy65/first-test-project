@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./tabsLayout.css";
 @import "./tab.css";
+@import "./dropDown.css";
 
 
 :root {

@@ -1,5 +1,7 @@
-@import "tailwindcss";.main-container{
-    @apply flex w-full h-full flex-row
+@import "tailwindcss";
+
+.main-container{
+    @apply flex w-full h-full flex-row overflow-hidden
 }
 
 .upper-margin{

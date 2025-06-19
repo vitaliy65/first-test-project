@@ -3,6 +3,7 @@ import { allTabs } from "@/data/tabs";
 import { TabType } from "@/types/types";
 
 interface TabsState {
+  tabs: TabType[];
   visibleTabs: TabType[];
   activeTabId: string | null;
   hiddenTabs: TabType[];
@@ -15,6 +16,7 @@ const loadState = (): TabsState => {
       const serializedState = localStorage.getItem("exonnTabsState");
       if (serializedState === null) {
         return {
+          tabs: allTabs,
           visibleTabs: allTabs,
           activeTabId: allTabs[0]?.id || null,
           hiddenTabs: [],
@@ -25,6 +27,7 @@ const loadState = (): TabsState => {
     } catch (error) {
       console.error("Error loading state from localStorage:", error);
       return {
+        tabs: allTabs,
         visibleTabs: allTabs,
         activeTabId: allTabs[0]?.id || null,
         hiddenTabs: [],
@@ -33,6 +36,7 @@ const loadState = (): TabsState => {
     }
   }
   return {
+    tabs: allTabs,
     visibleTabs: allTabs,
     activeTabId: allTabs[0]?.id || null,
     hiddenTabs: [],
@@ -56,27 +60,23 @@ export const tabsSlice = createSlice({
     setActiveTab: (state, action: PayloadAction<string>) => {
       state.activeTabId = action.payload;
     },
-    addTabFromHidden: (state, action: PayloadAction<string>) => {
-      const tabIndex = state.hiddenTabs.findIndex(
-        (tab) => tab.id === action.payload
-      );
-      if (tabIndex !== -1) {
-        const [tab] = state.hiddenTabs.splice(tabIndex, 1);
-        state.visibleTabs.push(tab);
-        state.activeTabId = tab.id;
-      }
-    },
-    moveTabToHidden: (state, action: PayloadAction<string>) => {
-      const tabIndex = state.visibleTabs.findIndex(
-        (tab) => tab.id === action.payload
-      );
-      if (tabIndex !== -1) {
-        const [tab] = state.visibleTabs.splice(tabIndex, 1);
-        state.hiddenTabs.push(tab);
-        if (state.activeTabId === action.payload) {
-          state.activeTabId = state.visibleTabs[0]?.id || null;
+    addTabFromHidden: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach((id) => {
+        const index = state.hiddenTabs.findIndex((tab) => tab.id === id);
+        if (index !== -1) {
+          const tabToAdd = state.hiddenTabs.splice(index, 1)[0];
+          state.visibleTabs.push(tabToAdd);
         }
-      }
+      });
+    },
+    moveTabToHidden: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach((id) => {
+        const tabToMove = state.visibleTabs.find((tab) => tab.id === id);
+        if (tabToMove) {
+          state.hiddenTabs.push(tabToMove);
+          state.visibleTabs = state.visibleTabs.filter((tab) => tab.id !== id);
+        }
+      });
     },
     setSidebar: (state, action: PayloadAction<boolean>) => {
       state.showSidebar = action.payload;

@@ -11,16 +11,19 @@ export default function DropDownMenu() {
   const dispatch = useAppDispatch();
   const hiddenTabs = useAppSelector((state) => state.tabs.hiddenTabs);
 
-  const handleTabClick = (tabId: string) => {
-    dispatch(addTabFromHidden(tabId));
+  const handleTabClick = (tabId: string, url: string) => {
+    dispatch(addTabFromHidden([tabId]));
     dispatch(setActiveTab(tabId));
+    window.location.href = url;
   };
+
+  const tabsInMenu = hiddenTabs;
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="dropdown-menu-trigger"
+          className={`dropdown-menu-trigger`}
           aria-label="Відкрити меню вкладок"
         >
           <ChevronDown size={16} />
@@ -30,11 +33,11 @@ export default function DropDownMenu() {
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="dropdown-menu-content" sideOffset={5}>
           <ul className="dropdown-menu-list">
-            {hiddenTabs.map((tab: TabType) => (
+            {tabsInMenu.map((tab: TabType) => (
               <DropdownMenu.Item
                 key={tab.id}
                 className="dropdown-menu-item"
-                onSelect={() => handleTabClick(tab.id)}
+                onSelect={() => handleTabClick(tab.id, tab.url)}
               >
                 <Image src={tab.icon} alt={tab.title} width={16} height={16} />
                 <span className="truncate">{tab.title}</span>

@@ -14,6 +14,7 @@ interface Props {
   onPin: () => void;
   onRemove: () => void;
   draggedTabId: UniqueIdentifier | null;
+  setRef?: (node: HTMLDivElement | null) => void;
 }
 
 const TabItem: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const TabItem: React.FC<Props> = ({
   onPin,
   onRemove,
   draggedTabId,
+  setRef,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -41,7 +43,12 @@ const TabItem: React.FC<Props> = ({
 
   return (
     <div
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node);
+        if (setRef) {
+          setRef(node);
+        }
+      }}
       style={style}
       {...attributes}
       {...listeners}
@@ -53,6 +60,7 @@ const TabItem: React.FC<Props> = ({
       onClick={onClick}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={handleMouseLeave}
+      data-id={tab.id}
     >
       {/* tab icon */}
       <Image src={tab.icon} alt={tab.title} width={16} height={16} />

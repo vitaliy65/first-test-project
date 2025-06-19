@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   updateTabsOrder,
   togglePinTab,
@@ -16,8 +17,17 @@ export const useTabs = () => {
     (state) => state.tabs
   );
 
-  // Сортируем вкладки по позиции
-  const sortedTabs = [...visibleTabs].sort((a, b) => a.position - b.position);
+  const sortedTabs = useMemo(() => {
+    return [...visibleTabs].sort((a, b) => a.position - b.position);
+  }, [visibleTabs]);
+
+  const pinnedTabs = useMemo(() => {
+    return sortedTabs.filter((tab) => tab.isPinned);
+  }, [sortedTabs]);
+
+  const unpinnedTabs = useMemo(() => {
+    return sortedTabs.filter((tab) => !tab.isPinned);
+  }, [sortedTabs]);
 
   const handleUpdateTabsOrder = (newTabs: TabType[]) => {
     dispatch(updateTabsOrder(newTabs));
@@ -31,21 +41,27 @@ export const useTabs = () => {
     dispatch(removeTab(tabId));
   };
 
-  const handleSetActiveTab = (tabId: string) => {
+  const handleSetActiveTab = (tabId: string, url: string) => {
     dispatch(setActiveTab(tabId));
+    window.location.href = url;
   };
 
   const handleAddTabFromHidden = (tabId: string) => {
-    dispatch(addTabFromHidden(tabId));
+    dispatch(addTabFromHidden([tabId]));
   };
 
   const handleMoveTabToHidden = (tabId: string) => {
-    dispatch(moveTabToHidden(tabId));
+    dispatch(moveTabToHidden([tabId]));
   };
 
-  // Разделяем закрепленные и обычные вкладки
-  const pinnedTabs = sortedTabs.filter((tab) => tab.isPinned);
-  const unpinnedTabs = sortedTabs.filter((tab) => !tab.isPinned);
+  const syncTabsVisibility = (tabsToHide: string[], tabsToShow: string[]) => {
+    if (tabsToHide.length > 0) {
+      dispatch(moveTabToHidden(tabsToHide));
+    }
+    if (tabsToShow.length > 0) {
+      dispatch(addTabFromHidden(tabsToShow));
+    }
+  };
 
   return {
     visibleTabs: sortedTabs,
@@ -59,6 +75,7 @@ export const useTabs = () => {
     removeTab: handleRemoveTab,
     setActiveTab: handleSetActiveTab,
     activeTabId,
+    syncTabsVisibility,
   };
 };
 
