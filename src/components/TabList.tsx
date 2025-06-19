@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import TabItem from "./TabItem";
 import { TabType } from "@/types/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
-import OverflowDropdown from "./OverflowDropdown";
 
 interface Props {
   tabs: TabType[];
@@ -12,7 +11,6 @@ interface Props {
   onPin: (id: string) => void;
   onRemove: (id: string) => void;
   draggedTabId: UniqueIdentifier | null;
-  containerWidth: number;
 }
 
 const TabList: React.FC<Props> = ({
@@ -22,53 +20,12 @@ const TabList: React.FC<Props> = ({
   onPin,
   onRemove,
   draggedTabId,
-  containerWidth,
 }) => {
-  const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const [visibleTabItems, setVisibleTabItems] = useState<TabType[]>([]);
-  const [overflowTabItems, setOverflowTabItems] = useState<TabType[]>([]);
-
-  useEffect(() => {
-    if (!tabsContainerRef.current) return;
-
-    const tabItemWidth = 180;
-    const availableWidth = tabsContainerRef.current.offsetWidth;
-
-    let currentVisible: TabType[] = [];
-    let currentOverflow: TabType[] = [];
-
-    const pinnedTabs = tabs.filter((tab) => tab.isPinned);
-    const unpinnedTabs = tabs.filter((tab) => !tab.isPinned);
-
-    let remainingWidth = availableWidth;
-
-    for (const tab of pinnedTabs) {
-      if (remainingWidth >= tabItemWidth) {
-        currentVisible.push(tab);
-        remainingWidth -= tabItemWidth;
-      } else {
-        currentOverflow.push(tab);
-      }
-    }
-
-    for (const tab of unpinnedTabs) {
-      if (remainingWidth >= tabItemWidth) {
-        currentVisible.push(tab);
-        remainingWidth -= tabItemWidth;
-      } else {
-        currentOverflow.push(tab);
-      }
-    }
-
-    setVisibleTabItems(currentVisible);
-    setOverflowTabItems(currentOverflow);
-  }, [tabs, containerWidth]);
-
-  const pinned = visibleTabItems.filter((tab) => tab.isPinned);
-  const unpinned = visibleTabItems.filter((tab) => !tab.isPinned);
+  const pinned = tabs.filter((tab) => tab.isPinned);
+  const unpinned = tabs.filter((tab) => !tab.isPinned);
 
   return (
-    <div ref={tabsContainerRef} className="flex">
+    <div className="flex">
       {[pinned, unpinned].map((group, i) => (
         <SortableContext
           key={i}
@@ -94,14 +51,6 @@ const TabList: React.FC<Props> = ({
           </div>
         </SortableContext>
       ))}
-      {overflowTabItems.length > 0 && (
-        <OverflowDropdown
-          tabs={overflowTabItems}
-          onSetActive={onSetActive}
-          onPin={onPin}
-          onRemove={onRemove}
-        />
-      )}
     </div>
   );
 };
